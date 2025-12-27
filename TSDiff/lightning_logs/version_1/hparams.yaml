@@ -1,0 +1,105 @@
+dataset: !!python/object/new:easydict.EasyDict
+  dictitems:
+    test: data/TS/wb97xd3/KwonRingConf_ts1&2/test_data.pkl
+    train: data/TS/wb97xd3/KwonRingConf_ts1&2/train_data.pkl
+    val: data/TS/wb97xd3/KwonRingConf_ts1&2/valid_data.pkl
+  state:
+    test: data/TS/wb97xd3/KwonRingConf_ts1&2/test_data.pkl
+    train: data/TS/wb97xd3/KwonRingConf_ts1&2/train_data.pkl
+    val: data/TS/wb97xd3/KwonRingConf_ts1&2/valid_data.pkl
+model: !!python/object/new:easydict.EasyDict
+  dictitems:
+    beta_end: 0.002
+    beta_schedule: sigmoid
+    beta_start: 1.0e-07
+    edge_cat_act: swish
+    edge_cutoff: 10.0
+    edge_encoder: mlp
+    edge_order: 4
+    encoder: &id001 !!python/object/new:easydict.EasyDict
+      dictitems:
+        cutoff: 10.0
+        edge_emb: false
+        hidden_dim: 256
+        mlp_act: swish
+        name: schnet
+        num_convs: 5
+        smooth_conv: false
+      state:
+        cutoff: 10.0
+        edge_emb: false
+        hidden_dim: 256
+        mlp_act: swish
+        name: schnet
+        num_convs: 5
+        smooth_conv: false
+    feat_dim: 28
+    hidden_dim: 256
+    mlp_act: swish
+    network: condensenc
+    num_diffusion_timesteps: 5000
+    pred_edge_order: 3
+    t0: 0
+    t1: 5000
+    type: diffusion
+  state:
+    beta_end: 0.002
+    beta_schedule: sigmoid
+    beta_start: 1.0e-07
+    edge_cat_act: swish
+    edge_cutoff: 10.0
+    edge_encoder: mlp
+    edge_order: 4
+    encoder: *id001
+    feat_dim: 28
+    hidden_dim: 256
+    mlp_act: swish
+    network: condensenc
+    num_diffusion_timesteps: 5000
+    pred_edge_order: 3
+    t0: 0
+    t1: 5000
+    type: diffusion
+train: !!python/object/new:easydict.EasyDict
+  dictitems:
+    anneal_power: 2.0
+    batch_size: 300
+    log_freq: 1000
+    max_grad_norm: 3000.0
+    max_iters: 400000
+    optimizer: &id002 !!python/object/new:easydict.EasyDict
+      dictitems:
+        beta1: 0.95
+        beta2: 0.999
+        lr: 0.0005
+        type: adam
+        weight_decay: 0.0
+      state:
+        beta1: 0.95
+        beta2: 0.999
+        lr: 0.0005
+        type: adam
+        weight_decay: 0.0
+    scheduler: &id003 !!python/object/new:easydict.EasyDict
+      dictitems:
+        factor: 0.8
+        min_lr: 0.000125
+        patience: 10
+        type: plateau
+      state:
+        factor: 0.8
+        min_lr: 0.000125
+        patience: 10
+        type: plateau
+    seed: 0
+    val_freq: 1000
+  state:
+    anneal_power: 2.0
+    batch_size: 300
+    log_freq: 1000
+    max_grad_norm: 3000.0
+    max_iters: 400000
+    optimizer: *id002
+    scheduler: *id003
+    seed: 0
+    val_freq: 1000
