@@ -91,7 +91,7 @@ def write_noV3000_mol(mol, mol_file, confId=0):
     #     f.write(mol_block)
     Chem.MolToMolFile(temp_mol, mol_file, forceV3000=False, confId=confId)
 
-def generate_mol_input(target_df, mol_dir=None, save_mol=True, banned_ene = []):
+def generate_mol_input(target_df, mol_dir=None, save_mol=True, banned_ene = [], seed=3):
     
     new_df = pd.DataFrame({"Index":{}, "Ene": {}, "Site_A": {}, "Site_B": {}, 'Z_Pos': {}, "Rot": {}})
     new_df_id = 0
@@ -119,7 +119,7 @@ def generate_mol_input(target_df, mol_dir=None, save_mol=True, banned_ene = []):
             try:
                 mfs = MolFromSmilesTransformer()
                 mols = mfs.transform([row['Ene']])
-                conf_gen = ConformerGenerator()
+                conf_gen = ConformerGenerator(random_state=seed)
                 [mol] = conf_gen.transform(mols) 
             except:
                 print(f"New Banned SMILES : {Index} {target_ene}")
