@@ -91,7 +91,7 @@ def write_noV3000_mol(mol, mol_file, confId=0):
     #     f.write(mol_block)
     Chem.MolToMolFile(temp_mol, mol_file, forceV3000=False, confId=confId)
 
-def generate_mol_input(target_df, mol_dir=None, save_mol=True, banned_ene = [], seed=3):
+def generate_mol_input(target_df, mol_dir=None, save_mol=True, banned_ene = [], seed=0):
     
     new_df = pd.DataFrame({"Index":{}, "Ene": {}, "Site_A": {}, "Site_B": {}, 'Z_Pos': {}, "Rot": {}})
     new_df_id = 0
@@ -115,7 +115,9 @@ def generate_mol_input(target_df, mol_dir=None, save_mol=True, banned_ene = [], 
         # 获得烯烃前体结构
         gs_mol_name = f'gs1_{Index:05}'
         if mol_dir == None or not os.path.isfile(os.path.join(mol_dir, f'{gs_mol_name}.mol')):
-            # mol = mol_manipulation.smiles2mol(target_ene, 1)
+            # try:
+            #     mol = mol_manipulation.smiles2mol(target_ene, 1, randomSeed=seed)
+            # except:
             try:
                 mfs = MolFromSmilesTransformer()
                 mols = mfs.transform([row['Ene']])
@@ -289,7 +291,7 @@ def FF_TS2(new_mol, temp_match, pairs, require_restrict, restrict_angle_2, id, r
         ff.Minimize()
     return new_mol
 
-def generate_mol_input_MultiConf(target_df, mol_dir, conf_num = 20, load_mol = False, save_mol=True, banned_ene = []):
+def generate_mol_input_MultiConf(target_df, mol_dir, conf_num = 20, load_mol = False, save_mol=True, banned_ene = [], seed=0):
     
     new_df = pd.DataFrame({"Index":{}, "Ene": {}, "Site_A": {}, "Site_B": {}, 'Z_Pos': {}, "Rot": {}})
     new_df_id = 0
@@ -321,7 +323,7 @@ def generate_mol_input_MultiConf(target_df, mol_dir, conf_num = 20, load_mol = F
             try:
                 mfs = MolFromSmilesTransformer()
                 mols = mfs.transform([row['Ene']])
-                conf_gen = ConformerGenerator()
+                conf_gen = ConformerGenerator(random_state=seed)
                 [mol] = conf_gen.transform(mols) 
             except:
                 print(f"New Banned SMILES : {Index} {target_ene}")
